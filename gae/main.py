@@ -38,12 +38,12 @@ class BaseHandler(webapp2.RequestHandler):
         return user
 
     def json_data(self):
-        return json.loads(self.request.body)
+        return self.request.POST
 
 class Login(BaseHandler):
     def post(self):
         json_data = self.json_data()
-        user_id = self.session.get('user_id') or json_data['userId']
+        user_id = self.session.get('user_id') or json_data['id']
         self.session['user_id'] = user_id
         user = User.get_or_insert(user_id, auth_ids=['facebook:' + user_id])
         user.put()
@@ -122,6 +122,7 @@ class FinishOrder(BaseHandler):
             }))
             return
         order.status = ORDER_DONE
+        order.finished = datetime.datetime.now()
         order.put()
         self.response.content_type = 'application/json'
         self.response.out.write(json.dumps({
@@ -164,16 +165,24 @@ class OrderStatus(BaseHandler):
             {
                 'id': o.key.id(),
                 'type': o.coffee.get().coffee_type,
-                'userId': o.user.key.string_id(),
+                'userId': o.user.string_id(),
                 'orderedAt': time.mktime(o.created.utctimetuple()),
                 'startedAt': time.mktime(o.started.utctimetuple()) if o.started else None,
                 'finishedAt': time.mktime(o.finished.utctimetuple()) if o.finished else None
             } for o in queued
         ]
+        users = User.query()
+        users = [
+            {'id': u.key.string_id(),
+             'name': '',
+             'photo': ''}
+            for u in users
+        ]
         self.response.content_type = 'application/json'
         self.response.out.write(json.dumps({
             'time': timestamp,
-            'orders': orders
+            'orders': orders,
+            'users': users
         }))
 
 class Home(BaseHandler):
@@ -185,15 +194,27 @@ class Home(BaseHandler):
         template = jinja_env.get_template('index.html')
         self.response.write(template.render(context))
 
+class CreateCoffee(BaseHandler):
+    def get(self):
+        coffee_type = self.request.get('type')
+        coffee = Coffee.query(Coffee.coffee_type == coffee_type).get()
+        if coffee:
+            return
+        coffee = Coffee(
+            coffee_type=coffee_type,
+            eta=3*60)
+        coffee.put()
+
 app = webapp2.WSGIApplication([
     ('/login/?', Login),
     ('/logout/?', Logout),
     ('/orders/?', PlaceOrder),
-    ('/orders/(.*)/start?', StartOrder),
-    ('/orders/(.*)/ready?', FinishOrder),
-    ('/orders/(.*)/cancel?', CancelOrder),
+    ('/orders/(.*)/start/?', StartOrder),
+    ('/orders/(.*)/ready/?', FinishOrder),
+    ('/orders/(.*)/cancel/?', CancelOrder),
     ('/status/?', OrderStatus),
     ('/home/?', Home),
+    ('/create_coffee/?', CreateCoffee),
 ], config={
     'webapp2_extras.sessions': config.webapp2_sessions,
     'webapp2_extras.auth': config.webapp2_auth

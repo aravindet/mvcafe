@@ -145,11 +145,9 @@ function onFbLogin(res) {
 			
 			console.log("user is", me, user);
 			
-			/*
 			
 			$.post('/login', user, function() {});
 		
-			*/
 			
 			$("#userPhoto").attr("src", user.photo);
 			$("#userName").text(user.name);

@@ -24,6 +24,7 @@ class Order(ndb.Model):
     created = ndb.DateTimeProperty(auto_now_add=True)
     updated = ndb.DateTimeProperty(auto_now=True)
     started = ndb.DateTimeProperty()
+    finished = ndb.DateTimeProperty()
     status = ndb.IntegerProperty(default=ORDER_QUEUED)
 
     @classmethod

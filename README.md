@@ -31,11 +31,11 @@ respond with { status: true } or { status: false, message: "Cafe is closed" }
 
 No postdata; respond with { status: true } or { status: false, message: "Can't find that order" }
 
-    POST /orders/<orderId>/start
+    POST /orders/<orderId>/ready
 
 No postdata; respond with { status: true } or { status: false, message: "You're not Sharon" }
 
-    POST /orders/<orderId>/done
+    POST /orders/<orderId>/cancel
     
 No postdata; respond with { status: true } or { status: false, message: "That's not your order." }
 

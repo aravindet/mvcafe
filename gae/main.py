@@ -3,10 +3,15 @@ import datetime
 import time
 import logging
 import webapp2
+import jinja2
+import os
 from webapp2_extras import sessions, auth
 
 import config
 from models import User, Coffee, Order, ORDER_QUEUED, ORDER_DONE, ORDER_STARTED, ORDER_CANCELLED
+
+jinja_env = jinja2.Environment(
+    loader=jinja2.FileSystemLoader(os.path.join(os.path.dirname(__file__), 'templates')))
 
 class BaseHandler(webapp2.RequestHandler):
     def dispatch(self):
@@ -25,20 +30,12 @@ class BaseHandler(webapp2.RequestHandler):
         return self.session_store.get_session()
 
     @webapp2.cached_property
-    def auth(self):
-        return auth.get_auth(request=self.request)
-
-    @webapp2.cached_property
     def user(self):
-        user = self.auth.get_user_by_session()
+        user_id = self.session.get('user_id')
+        if not user_id:
+            return None
+        user = User.get_by_id(user_id)
         return user
-
-    @webapp2.cached_property
-    def user_model(self):
-        user_model, timestamp = self.auth.store.user_model.get_by_auth_token(
-            self.user['user_id'],
-            self.user['token']) if self.user else (None, None)
-        return user_model
 
     def json_data(self):
         return json.loads(self.request.body)
@@ -65,10 +62,7 @@ class Logout(BaseHandler):
 
 class PlaceOrder(BaseHandler):
     def post(self):
-        user_id = self.session.get('user_id')
-        if not user_id:
-            self.abort(401)
-        user = User.get_by_id(user_id)
+        user = self.user
         if not user:
             self.abort(401)
         json_data = self.json_data()
@@ -93,10 +87,7 @@ class PlaceOrder(BaseHandler):
 
 class StartOrder(BaseHandler):
     def post(self, order_id):
-        user_id = self.session.get('user_id')
-        if not user_id:
-            self.abort(401)
-        user = User.get_by_id(user_id)
+        user = self.user
         if not user:
             self.abort(401)
         # TODO: only allow Sharon
@@ -109,6 +100,7 @@ class StartOrder(BaseHandler):
             }))
             return
         order.status = ORDER_STARTED
+        order.started = datetime.datetime.now()
         order.put()
         self.response.content_type = 'application/json'
         self.response.out.write(json.dumps({
@@ -117,10 +109,7 @@ class StartOrder(BaseHandler):
 
 class FinishOrder(BaseHandler):
     def post(self, order_id):
-        user_id = self.session.get('user_id')
-        if not user_id:
-            self.abort(401)
-        user = User.get_by_id(user_id)
+        user = self.user
         if not user:
             self.abort(401)
         # TODO: only allow Sharon
@@ -141,10 +130,7 @@ class FinishOrder(BaseHandler):
 
 class CancelOrder(BaseHandler):
     def post(self, order_id):
-        user_id = self.session.get('user_id')
-        if not user_id:
-            self.abort(401)
-        user = User.get_by_id(user_id)
+        user = self.user
         if not user:
             self.abort(401)
         # TODO: only allow Sharon
@@ -156,12 +142,20 @@ class CancelOrder(BaseHandler):
                 'message': 'Can\'t find that order.'
             }))
             return
+        if order.user.key != user.key:
+            self.response.status_int = 403
+            self.response.out.write(json.dumps({
+                'status': False,
+                'message': 'Not your order.'
+            }))
+            return
         order.status = ORDER_CANCELLED
         order.put()
         self.response.content_type = 'application/json'
         self.response.out.write(json.dumps({
             'status': True
         }))
+
 class OrderStatus(BaseHandler):
     def get(self):
         queued = Order.queued()
@@ -182,11 +176,24 @@ class OrderStatus(BaseHandler):
             'orders': orders
         }))
 
+class Home(BaseHandler):
+    def get(self):
+        user = self.user
+        context = {
+            'user': user
+        }
+        template = jinja_env.get_template('index.html')
+        self.response.write(template.render(context))
+
 app = webapp2.WSGIApplication([
     ('/login/?', Login),
     ('/logout/?', Logout),
     ('/orders/?', PlaceOrder),
+    ('/orders/(.*)/start?', StartOrder),
+    ('/orders/(.*)/ready?', FinishOrder),
+    ('/orders/(.*)/cancel?', CancelOrder),
     ('/status/?', OrderStatus),
+    ('/home/?', Home),
 ], config={
     'webapp2_extras.sessions': config.webapp2_sessions,
     'webapp2_extras.auth': config.webapp2_auth

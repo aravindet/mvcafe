@@ -5,6 +5,10 @@ api_version: 1
 threadsafe: yes
 
 handlers:
+- url: /public/
+  static_dir: public
+  expiration: "99d"
+
 - url: .*
   script: gae.main.app
 

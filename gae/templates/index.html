@@ -1,0 +1,49 @@
+<!doctype html>
+
+<html>
+	<head>
+		<title>minimum viable cafe app</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<link rel="stylesheet" href="/public/style.css" />
+	</head>
+	<body>
+		<div id="fb-root"></div>
+		<div class="wrapper" id="banner"><div class="container">
+			<div id="photo"></div>
+			<div id="title">the minimum viable cafe</div>
+			<div id="subtitle">minimum viable coffee ordering app.</div>
+		</div></div>
+		<div class="wrapper" id="main"><div class="container">
+			<div id="user">
+				I am:
+				<img id="userPhoto" />
+        {% if not user %}
+          <span id="userName">not logged in yet.</span>
+          <a id="loginBtn" href="#">Login</a>
+        {% else %}
+          <span>{{ user.key.id() }}</span>
+        {% endif %}
+			</div>
+			<div id="barista">
+				<h1>You're the barista!</h1>
+			</div>
+			<h1>Orders in the queue</h1>
+			<div id="orders"></div>
+			<h1>Add an order</h1>
+			<div id="placeOrder">
+				<button class="orderBtn icon-espresso" data-coffee="espresso">Espresso</button>
+				<button class="orderBtn icon-capuccino" data-coffee="cappuccino">Cappuccino</button>
+				<button class="orderBtn icon-latte" data-coffee="latte">Latte</button>
+				<button class="orderBtn icon-mocha" data-coffee="mocha">Mocha</button>
+				<button class="orderBtn icon-americano" data-coffee="americano">Americano</button>
+			</div>
+			
+			
+		</div></div>
+		<div class="wrapper" id="footer"><div class="container">
+			JFDI.
+		</div></div>
+		<script src="http://code.jquery.com/jquery.js"></script>
+		<script src="/public/customer.js"></script>
+	</body>
+</html>

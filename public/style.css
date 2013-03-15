@@ -10,8 +10,8 @@ html, body { margin: 0; padding: 0; }
 	background: #000; color: white;
 	padding-top: 40px; padding-bottom: 40px;
 }
-#title  { font-size: 3em; padding-left: 100px; }
-#subtitle { font-size: 2em; color: #ccc; padding-left: 100px; }
+#title  { font-size: 3em; }
+#subtitle { font-size: 2em; color: #ccc; }
 h1 { font-weight: normal; font-size: 2em; padding: 0; margin: 1em 0 0 0; }
 p { color: #666; padding: 0; margin: 0 0 1em 0; }
 
@@ -25,8 +25,34 @@ h1, p { z-index: 1; position: relative; padding-left: 70px; }
 	margin-top: 40px; margin-bottom: 80px;
 	color: #ccc;
 }
+
+.order {
+	padding: 10px; border-radius: 4px; background: #eee;
+	margin: 10px;
+}
+
+.orderBtn {
+	background-color: #000; border-radius: 4px; color: #fff;
+	border: none; padding: 10px;
+}
+
+.coffee, .user {
+	height: 100px; width: 115px; 
+    background-image: url('coffee-icons.jpg');
+	display: inline-block; border-radius: 4px;
+	margin: 4px;
+}
+
+.orderBtn {
+	height: 100px; width: 115px; 
+    background-image: url('coffee-icons.jpg');
+	display: inline-block; border-radius: 4px;
+	margin: 4px; text-indent: -9999px;
+}
+
+.readyIn, .cancel { vertical-align: bottom; }
  
-span.coffee-icon {
+.coffee-icon {
     background-image: url(coffee-icons.jpg);
     display: inline-block;
     margin: 0 7px;
@@ -38,15 +64,15 @@ span.coffee-icon {
     background-repeat: no-repeat;
 }
 
-span.icon-latte {background-position: -0px -0px;}
-span.icon-mocha {background-position: -105px -0px;}
-span.icon-cappuccino {background-position: -210px -0px;}
-span.icon-decaf {background-position: -0px -100px;}
-span.icon-halfcaf {background-position: -105px -100px;}
-span.icon-extra-shot {background-position: -210px -100px;}
-span.icon-soy {background-position: -0px -200px;}
-span.icon-nonfat {background-position: -105px -200px;}
-span.icon-espresso {background-position: -210px -200px;}
-span.icon-iced {background-position: -0px -300px;}
-span.icon-irish {background-position: -105px -300px;}
-span.icon-americano {background-position: -210px -300px;}
+.icon-latte {background-position: -0px -0px;}
+.icon-mocha {background-position: -105px -0px;}
+.icon-cappuccino {background-position: -210px -0px;}
+.icon-decaf {background-position: -0px -100px;}
+.icon-halfcaf {background-position: -105px -100px;}
+.icon-extra-shot {background-position: -210px -100px;}
+.icon-soy {background-position: -0px -200px;}
+.icon-nonfat {background-position: -105px -200px;}
+.icon-espresso {background-position: -210px -200px;}
+.icon-iced {background-position: -0px -300px;}
+.icon-irish {background-position: -105px -300px;}
+.icon-americano {background-position: -210px -300px;}

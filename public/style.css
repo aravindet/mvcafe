@@ -43,6 +43,13 @@ h1, p { z-index: 1; position: relative; padding-left: 70px; }
 	margin: 4px;
 }
 
+.orderBtn {
+	height: 100px; width: 115px; 
+    background-image: url('coffee-icons.jpg');
+	display: inline-block; border-radius: 4px;
+	margin: 4px; text-indent: -9999px;
+}
+
 .readyIn, .cancel { vertical-align: bottom; }
  
 .coffee-icon {

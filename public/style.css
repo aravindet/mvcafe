@@ -10,8 +10,8 @@ html, body { margin: 0; padding: 0; }
 	background: #000; color: white;
 	padding-top: 40px; padding-bottom: 40px;
 }
-#title  { font-size: 3em; padding-left: 100px; }
-#subtitle { font-size: 2em; color: #ccc; padding-left: 100px; }
+#title  { font-size: 3em; }
+#subtitle { font-size: 2em; color: #ccc; }
 h1 { font-weight: normal; font-size: 2em; padding: 0; margin: 1em 0 0 0; }
 p { color: #666; padding: 0; margin: 0 0 1em 0; }
 
@@ -25,3 +25,21 @@ h1, p { z-index: 1; position: relative; padding-left: 70px; }
 	margin-top: 40px; margin-bottom: 80px;
 	color: #ccc;
 }
+
+.order {
+	padding: 10px; border-radius: 4px; background: #eee;
+	margin: 10px;
+}
+
+.orderBtn {
+	background-color: #000; border-radius: 4px; color: #fff;
+	border: none; padding: 10px;
+}
+
+.coffee, .user {
+	height: 50px; width: 50px; background-color: #ee0;
+	display: inline-block; border-radius: 4px;
+	margin: 4px;
+}
+
+.readyIn, .cancel { vertical-align: bottom; }

@@ -25,3 +25,28 @@ h1, p { z-index: 1; position: relative; padding-left: 70px; }
 	margin-top: 40px; margin-bottom: 80px;
 	color: #ccc;
 }
+ 
+span.coffee-icon {
+    background-image: url(coffee-icons.jpg);
+    display: inline-block;
+    margin: 0 7px;
+    line-height: 18px;
+    height: 100px;
+    width: 115px;
+    max-width: 115px;
+    overflow: hidden;
+    background-repeat: no-repeat;
+}
+
+span.icon-latte {background-position: -0px -0px;}
+span.icon-mocha {background-position: -105px -0px;}
+span.icon-cappuccino {background-position: -210px -0px;}
+span.icon-decaf {background-position: -0px -100px;}
+span.icon-halfcaf {background-position: -105px -100px;}
+span.icon-extra-shot {background-position: -210px -100px;}
+span.icon-soy {background-position: -0px -200px;}
+span.icon-nonfat {background-position: -105px -200px;}
+span.icon-espresso {background-position: -210px -200px;}
+span.icon-iced {background-position: -0px -300px;}
+span.icon-irish {background-position: -105px -300px;}
+span.icon-americano {background-position: -210px -300px;}

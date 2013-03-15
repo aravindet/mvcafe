@@ -1,0 +1,27 @@
+@import url(http://fonts.googleapis.com/css?family=Lato:400,700);
+
+html, body, input { font-family: Lato, sans-serif; }
+html, body { margin: 0; padding: 0; }
+.wrapper { padding: 0 40px; }
+.container { max-width: 600px; min-width: 300px;
+	margin: 0 auto; position: relative;
+}
+#banner {
+	background: #000; color: white;
+	padding-top: 40px; padding-bottom: 40px;
+}
+#title  { font-size: 3em; padding-left: 100px; }
+#subtitle { font-size: 2em; color: #ccc; padding-left: 100px; }
+h1 { font-weight: normal; font-size: 2em; padding: 0; margin: 1em 0 0 0; }
+p { color: #666; padding: 0; margin: 0 0 1em 0; }
+
+h1, p { z-index: 1; position: relative; padding-left: 70px; }
+#frog {
+	width: 250px; height: 250px; position: absolute;
+	left: -180px; z-index: 0;
+	background: url('frog.jpg') no-repeat left center;
+}
+#footer {
+	margin-top: 40px; margin-bottom: 80px;
+	color: #ccc;
+}

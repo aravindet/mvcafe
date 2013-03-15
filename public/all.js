@@ -124,8 +124,44 @@ $(document).ready(function() {
 	});
 	
 	sync();
-	
 });
+
+function onFbLogin(res) {
+	if(res.authResponse) {
+		FB.api('/me', function(me) {
+			user = {
+				id: me.id,
+				name: me.name,
+				photo: "http://graph.facebook.com/" + me.id + "/picture"
+			};
+			
+			// Sharon's facebook ID is 660127222
+			// Aravind's 721318124
+			
+			if(user.id == "721318124") {
+				$("#barista").show();
+				baristaMode = true;
+			}
+			
+			console.log("user is", me, user);
+			
+			/*
+			
+			$.post('/login', user, function() {});
+		
+			*/
+			
+			$("#userPhoto").attr("src", user.photo);
+			$("#userName").text(user.name);
+			$("#loginBtn").hide();
+			
+			sync();
+		});
+	} else {
+		$("#loginBtn").show();
+	}
+}
+
 
 window.fbAsyncInit = function() {
 	// init the FB JS SDK
@@ -138,41 +174,6 @@ window.fbAsyncInit = function() {
 	
 	FB.getLoginStatus(onFbLogin);
 	
-	function onFbLogin(res) {
-		if(res.authResponse) {
-			FB.api('/me', function(me) {
-				user = {
-					id: me.id,
-					name: me.name,
-					photo: "http://graph.facebook.com/" + me.id + "/picture"
-				};
-				
-				// Sharon's facebook ID is 660127222
-				// Aravind's 721318124
-				
-				if(user.id == "721318124") {
-					$("#barista").show();
-					baristaMode = true;
-				}
-				
-				console.log("user is", me, user);
-				
-				/*
-				
-				$.post('/login', user, function() {});
-			
-				*/
-				
-				$("#userPhoto").attr("src", user.photo);
-				$("#userName").text(user.name);
-				$("#loginBtn").hide();
-				
-				sync();
-			});
-		} else {
-			$("#loginBtn").show();
-		}
-	}
 	// Additional initialization code such as adding Event Listeners goes here
 
 };

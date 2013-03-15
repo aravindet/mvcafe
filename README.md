@@ -14,7 +14,10 @@ Post data is like:
       photo: "http://twitter.com/asdfwd/photo"
     }
 
-Respond with { status: true } or { status: false, message: "Go away, we don't like you." }
+Respond with 
+    { status: true } 
+or 
+    { status: false, message: "Go away, we don't like you." }
 
 
     POST /orders
@@ -25,7 +28,10 @@ Example post data:
       "type": "cappuccino"
     }
 
-respond with { status: true } or { status: false, message: "Cafe is closed" }
+respond with 
+    { status: true } 
+or 
+    { status: false, message: "Cafe is closed" }
 
     POST /orders/<orderId>/start
 

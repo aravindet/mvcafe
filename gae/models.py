@@ -1,6 +1,11 @@
 from google.appengine.ext import ndb
 from webapp2_extras.appengine.auth.models import User
 
+ORDER_QUEUED = 2
+ORDER_STARTED = 1
+ORDER_DONE = 0
+ORDER_CANCELLED = -1
+
 class User(User):
     created = ndb.DateTimeProperty(auto_now_add=True)
     updated = ndb.DateTimeProperty(auto_now=True)
@@ -19,7 +24,7 @@ class Order(ndb.Model):
     created = ndb.DateTimeProperty(auto_now_add=True)
     updated = ndb.DateTimeProperty(auto_now=True)
     started = ndb.DateTimeProperty()
-    status = ndb.IntegerProperty()
+    status = ndb.IntegerProperty(default=ORDER_QUEUED)
 
     @classmethod
     def queued(cls):

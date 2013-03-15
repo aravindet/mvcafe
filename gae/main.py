@@ -6,7 +6,7 @@ import webapp2
 from webapp2_extras import sessions, auth
 
 import config
-from models import User, Coffee, Order
+from models import User, Coffee, Order, ORDER_QUEUED, ORDER_DONE, ORDER_STARTED, ORDER_CANCELLED
 
 class BaseHandler(webapp2.RequestHandler):
     def dispatch(self):
@@ -75,16 +75,93 @@ class PlaceOrder(BaseHandler):
         coffee_type = json_data['type']
         coffee = Coffee.get_type(coffee_type)
         if not coffee:
-            self.abort(404)
+            self.response.status_int = 404
+            self.response.out.write(json.dumps({
+                'status': False,
+                'message': 'Coffee with type %s not found.' % coffee_type
+            }))
+            return
         order = Order(
             user=user.key,
             coffee=coffee.key,
         )
+        order.put()
         self.response.content_type = 'application/json'
         self.response.out.write(json.dumps({
             'status': True
         }))
 
+class StartOrder(BaseHandler):
+    def post(self, order_id):
+        user_id = self.session.get('user_id')
+        if not user_id:
+            self.abort(401)
+        user = User.get_by_id(user_id)
+        if not user:
+            self.abort(401)
+        # TODO: only allow Sharon
+        order = Order.get_by_id(str(order_id))
+        if not order or order.status != ORDER_QUEUED:
+            self.response.status_int = 404
+            self.response.out.write(json.dumps({
+                'status': False,
+                'message': 'Can\'t find that order.'
+            }))
+            return
+        order.status = ORDER_STARTED
+        order.put()
+        self.response.content_type = 'application/json'
+        self.response.out.write(json.dumps({
+            'status': True
+        }))
+
+class FinishOrder(BaseHandler):
+    def post(self, order_id):
+        user_id = self.session.get('user_id')
+        if not user_id:
+            self.abort(401)
+        user = User.get_by_id(user_id)
+        if not user:
+            self.abort(401)
+        # TODO: only allow Sharon
+        order = Order.get_by_id(str(order_id))
+        if not order or order.status != ORDER_STARTED:
+            self.response.status_int = 404
+            self.response.out.write(json.dumps({
+                'status': False,
+                'message': 'Can\'t find that order.'
+            }))
+            return
+        order.status = ORDER_DONE
+        order.put()
+        self.response.content_type = 'application/json'
+        self.response.out.write(json.dumps({
+            'status': True
+        }))
+
+class CancelOrder(BaseHandler):
+    def post(self, order_id):
+        user_id = self.session.get('user_id')
+        if not user_id:
+            self.abort(401)
+        user = User.get_by_id(user_id)
+        if not user:
+            self.abort(401)
+        # TODO: only allow Sharon
+        order = Order.get_by_id(str(order_id))
+        if not order or order.status != ORDER_QUEUED:
+            self.response.status_int = 404
+            self.response.out.write(json.dumps({
+                'status': False,
+                'message': 'Can\'t find that order.'
+            }))
+            return
+        order.status = ORDER_CANCELLED
+        order.put()
+        self.response.content_type = 'application/json'
+        self.response.out.write(json.dumps({
+            'status': True
+        }))
 class OrderStatus(BaseHandler):
     def get(self):
         queued = Order.queued()
